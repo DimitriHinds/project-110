@@ -21,11 +21,40 @@ function modelLoaded()
     console.log('Model Loaded!');
 }
 
+function check()
+{
+    img = document.getElementById('captured_image');
+    classifier.classify(img, gotResult);
+}
+
 function speak()
 {
     var synth = window.speechSynthesis;
     speak_data_1 = "The first prediction is " + prediction_1;
-    speak_data_2 = "And the second prediction is " + prediction_2;
-    var utterThis = new SpeechSynthesisUtterance(speak_data_1 + speak_data_2);
+    var utterThis = new SpeechSynthesisUtterance(speak_data_1);
     synth.speak(utterThis);
+}
+
+function gotResult(error, results)
+{
+    if (error){
+        console.error(error);
+    } else {
+        console.log(results);
+        document.getElementById("result_emotion_name").innerHTML = results[0].label;
+        prediction_1 = results[0].label;
+        speak();
+        if(results[0].label == "Amazing")
+        {
+            document.getElementById("update_emoji").innerHTML = "&#128076"
+        }
+        if(results[0].label == "Victory")
+        {
+            document.getElementById("update_emoji").innerHTML = "&#9996"
+        }
+        if(results[0].label == "Best")
+        {
+            document.getElementById("update_emoji").innerHTML = "&#128077"
+        }
+    }
 }
